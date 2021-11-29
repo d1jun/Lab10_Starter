@@ -11,10 +11,10 @@
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
   <script src="assets/scripts/speechSynth.js" type="module"></script>
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
-<body>
-  <header>
+<body></body>  <header>
     <nav>
       <a href="index.html" title="Go to  party horn">Party Horn</a>
     </nav>
@@ -32,6 +32,33 @@
       <button>Press to Talk</button>
     </section>
   </main>
+  <script>
+    const randNum = Math.floor(Math.random() * 10000);
+    var user = {
+      key: randNum,
+    };
+  
+    var div = document.createElement('div');
+    document.body.appendChild(div);
+  
+    div.appendChild(document.createTextNode('Initializing...'));
+  
+    var ldclient = LDClient.initialize('619ee34f85757f0cbb58ccc1', user);
+    // '619ee03ffc58e80f02623e55' jeremy
+    // '619ee34f85757f0cbb58ccc1' david
+  
+    function render() {
+      var shouldShow = ldclient.variation('red-speak-button', false);
+      var label = (shouldShow ? 'Showing' : 'Not showing') + ' your feature to ' + user.key;
+      if(shouldShow) {
+        document.querySelector('button').classList.add('red');
+      }
+      // div.replaceChild(document.createTextNode(label), div.firstChild);
+    }
+  
+    ldclient.on('ready', render);
+    ldclient.on('change', render);
+  </script>
 </body>
 
 </html>

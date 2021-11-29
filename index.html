@@ -14,6 +14,17 @@
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
   <script src="assets/scripts/partyHorn.js" type="module"></script>
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q1B5BC37LY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q1B5BC37LY');
+</script>
 </head>
 
 <body>
@@ -34,14 +45,37 @@
         <option value="car-horn">Car Horn</option>
         <option value="party-horn">Party Horn</option>
       </select>
-      <div id="volume-controls">
-        <input type="range" name="volume" id="volume" value="50" min="0" max="100" step="1" />
-        <img src="assets/icons/volume-level-2.svg" alt="Volume level 2" />
-      </div>
       <button>Play Sound</button>
       <audio class="hidden" src=""></audio>
     </section>
   </main>
+  <script>
+    const randNum = Math.floor(Math.random() * 10000);
+    var user = {
+      key: randNum,
+    };
+  
+    var div = document.createElement('div');
+    document.body.appendChild(div);
+  
+    div.appendChild(document.createTextNode('Initializing...'));
+  
+    var ldclient = LDClient.initialize('619ee34f85757f0cbb58ccc1', user);
+    // '619ee03ffc58e80f02623e55' jeremy
+    // '619ee34f85757f0cbb58ccc1' david
+  
+    function render() {
+      var shouldShow = ldclient.variation('blue-background', false);
+      var label = (shouldShow ? 'Showing' : 'Not showing') + ' your feature to ' + user.key;
+      if(shouldShow) {
+        document.querySelector('body').classList.add('blue');
+      }
+      // div.replaceChild(document.createTextNode(label), div.firstChild);
+    }
+  
+    ldclient.on('ready', render);
+    ldclient.on('change', render);
+  </script>  
 </body>
 
 </html>
